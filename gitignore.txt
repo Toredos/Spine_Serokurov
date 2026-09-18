@@ -1,0 +1,24 @@
+# Visual Studio / Rider служебные файлы
+.vs/
+.vsconfig
+*.sln
+*.suo
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.VC.opendb
+.idea/
+
+# UE5 сгенерированные и промежуточные папки
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+Build/
+
+# Плагины (если не входят намеренно в репозиторий как исходники)
+# Plugins/
+
+# Прочее
+*.tmp
+*.log
