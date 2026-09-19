@@ -11,6 +11,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Spine_Serokurov.h"
+#include "AbilityInputID.h"
+#include "AbilitySystemComponent.h"
 
 ASpine_SerokurovCharacter::ASpine_SerokurovCharacter()
 {
@@ -137,5 +139,8 @@ void ASpine_SerokurovCharacter::DoJumpEnd()
 
 void ASpine_SerokurovCharacter::OnAttackInput()
 {
-	// Заглушка. В этапе 5 здесь появится вызов TryActivateAbilityByTag через AbilitySystemComponent.
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->AbilityLocalInputPressed(static_cast<int32>(EAbilityInputID::Attack));
+	}
 }
