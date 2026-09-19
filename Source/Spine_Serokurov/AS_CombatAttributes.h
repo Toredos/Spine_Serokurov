@@ -1,3 +1,5 @@
+#pragma once
+
 #include "AbilitySystemComponent.h"
 #include "AttributeSet.h"
 #include "AS_CombatAttributes.generated.h"

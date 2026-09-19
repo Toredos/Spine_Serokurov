@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "BaseCombatCharacter.h"
 #include "Logging/LogMacros.h"
 #include "Spine_SerokurovCharacter.generated.h"
 
@@ -19,7 +20,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
  *  Implements a controllable orbiting camera
  */
 UCLASS(abstract)
-class ASpine_SerokurovCharacter : public ACharacter
+class ASpine_SerokurovCharacter : public ABaseCombatCharacter
 {
 	GENERATED_BODY()
 
