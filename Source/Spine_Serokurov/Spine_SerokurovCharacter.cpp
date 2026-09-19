@@ -65,6 +65,9 @@ void ASpine_SerokurovCharacter::SetupPlayerInputComponent(UInputComponent* Playe
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASpine_SerokurovCharacter::Look);
+
+		// Attacking
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ASpine_SerokurovCharacter::OnAttackInput);
 	}
 	else
 	{
@@ -130,4 +133,9 @@ void ASpine_SerokurovCharacter::DoJumpEnd()
 {
 	// signal the character to stop jumping
 	StopJumping();
+}
+
+void ASpine_SerokurovCharacter::OnAttackInput()
+{
+	// Заглушка. В этапе 5 здесь появится вызов TryActivateAbilityByTag через AbilitySystemComponent.
 }

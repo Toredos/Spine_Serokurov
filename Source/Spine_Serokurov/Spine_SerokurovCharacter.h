@@ -49,6 +49,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* MouseLookAction;
 
+	/** Attack Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	class UInputAction* AttackAction;
+
+	void OnAttackInput();
+
 public:
 
 	/** Constructor */
