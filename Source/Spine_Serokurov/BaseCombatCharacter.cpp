@@ -26,19 +26,27 @@ void ABaseCombatCharacter::BeginPlay()
     if (AbilitySystemComponent)
     {
         AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
+        AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UAS_CombatAttributes::GetHealthAttribute())
+            .AddUObject(this, &ABaseCombatCharacter::HandleHealthChanged);
     }
+}
+
+void ABaseCombatCharacter::HandleHealthChanged(const FOnAttributeChangeData& Data)
+{
+    OnHealthChanged(Data.OldValue, Data.NewValue);
 }
 
 // Called every frame
 void ABaseCombatCharacter::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+    Super::Tick(DeltaTime);
 
 }
 
 // Called to bind functionality to input
 void ABaseCombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+    Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }

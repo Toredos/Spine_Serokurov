@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayEffectTypes.h" // для FOnAttributeChangeData
 #include "BaseCombatCharacter.generated.h"
 
 UENUM(BlueprintType)
@@ -38,6 +39,8 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Combo")
 	float CurrentAttackDamage = 0.0f;
 
+	void HandleHealthChanged(const FOnAttributeChangeData& Data);
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -47,5 +50,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Combat")
 	void SetWeaponCollisionEnabled(EWeaponCollisionSlot Slot, bool bEnabled);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Combat")
+	void OnHealthChanged(float OldValue, float NewValue);
 
 };
