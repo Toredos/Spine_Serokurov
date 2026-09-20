@@ -45,7 +45,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Combat")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Combat")
 	void SetWeaponCollisionEnabled(EWeaponCollisionSlot Slot, bool bEnabled);
 
 };
