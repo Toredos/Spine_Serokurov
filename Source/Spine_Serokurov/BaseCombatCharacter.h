@@ -27,6 +27,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
 	class UAS_CombatAttributes* CombatAttributes;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Combo")
+	float CurrentAttackDamage = 0.0f;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
