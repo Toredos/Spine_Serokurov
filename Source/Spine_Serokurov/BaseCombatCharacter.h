@@ -83,6 +83,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void StartRotationBlend(FRotator TargetRotation, float Duration);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float HitstopDefaultRealDuration = 0.1f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	float HitstopDefaultTimeDilation = 0.05f;
+
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void TriggerHitstop(float RealDuration = 0.1f, float TimeDilationScale = 0.05f);
 

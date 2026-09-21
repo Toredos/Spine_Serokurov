@@ -37,7 +37,7 @@ void ABaseCombatCharacter::HandleHealthChanged(const FOnAttributeChangeData& Dat
 {
     if (Data.OldValue > 0.0f && Data.NewValue <= 0.0f)
     {
-        TriggerHitstop();
+        TriggerHitstop(HitstopDefaultRealDuration, HitstopDefaultTimeDilation);
     }
 
     OnHealthChanged(Data.OldValue, Data.NewValue);
