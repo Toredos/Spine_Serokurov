@@ -38,6 +38,17 @@ void ABaseCombatCharacter::HandleHealthChanged(const FOnAttributeChangeData& Dat
     if (Data.OldValue > 0.0f && Data.NewValue <= 0.0f)
     {
         TriggerHitstop(HitstopDefaultRealDuration, HitstopDefaultTimeDilation);
+        if (DeathSound)
+        {
+            UGameplayStatics::PlaySound2D(this, DeathSound);
+        }
+    }
+    else if (Data.NewValue < Data.OldValue)
+    {
+        if (HitReactSound)
+        {
+            UGameplayStatics::PlaySound2D(this, HitReactSound);
+        }
     }
 
     OnHealthChanged(Data.OldValue, Data.NewValue);

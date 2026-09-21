@@ -100,4 +100,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void SetCurrentMovementInputDirection(FVector Direction) { CachedMovementInputDirection = Direction; }
 
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	class USoundBase* CurrentAttackHitSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	class USoundBase* HitReactSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	class USoundBase* DeathSound;
+
 };

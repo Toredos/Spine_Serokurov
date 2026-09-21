@@ -108,12 +108,12 @@ void ASpine_SerokurovCharacter::DoMove(float Right, float Forward)
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
 		SetCurrentMovementInputDirection(ForwardDirection * Forward + RightDirection * Right);
-
+		
 		if (AbilitySystemComponent && AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.Attacking"))))
 		{
 			return;
 		}
-
+		
 		AddMovementInput(ForwardDirection, Forward);
 		AddMovementInput(RightDirection, Right);
 	}
