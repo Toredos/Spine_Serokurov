@@ -13,6 +13,8 @@
 #include "Spine_Serokurov.h"
 #include "AbilityInputID.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayTagContainer.h"
+#include "AbilitySystemComponent.h"
 
 ASpine_SerokurovCharacter::ASpine_SerokurovCharacter()
 {
@@ -99,17 +101,19 @@ void ASpine_SerokurovCharacter::DoMove(float Right, float Forward)
 {
 	if (GetController() != nullptr)
 	{
-		// find out which way is forward
 		const FRotator Rotation = GetController()->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		// add movement 
+		SetCurrentMovementInputDirection(ForwardDirection * Forward + RightDirection * Right);
+
+		if (AbilitySystemComponent && AbilitySystemComponent->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.Attacking"))))
+		{
+			return;
+		}
+
 		AddMovementInput(ForwardDirection, Forward);
 		AddMovementInput(RightDirection, Right);
 	}

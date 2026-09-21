@@ -58,6 +58,8 @@ protected:
 	float RotationBlendElapsed = 0.0f;
 	float RotationBlendDuration = 0.15f;
 
+	FVector CachedMovementInputDirection = FVector::ZeroVector;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -91,5 +93,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void TriggerHitstop(float RealDuration = 0.1f, float TimeDilationScale = 0.05f);
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	FVector GetCurrentMovementInputDirection() const { return CachedMovementInputDirection; }
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void SetCurrentMovementInputDirection(FVector Direction) { CachedMovementInputDirection = Direction; }
 
 };
