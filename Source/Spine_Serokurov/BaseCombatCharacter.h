@@ -46,6 +46,12 @@ protected:
 	// TWeakObjectPtr безопасен без рефлексии, GC не нужен для защиты
 	TMap<EWeaponCollisionSlot, TSet<TWeakObjectPtr<AActor>>> HitActorsThisWindowBySlot;
 
+	bool bIsRotationBlending = false;
+	FRotator RotationBlendStart;
+	FRotator RotationBlendTarget;
+	float RotationBlendElapsed = 0.0f;
+	float RotationBlendDuration = 0.15f;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -67,5 +73,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void ClearHitActorsThisWindow(EWeaponCollisionSlot Slot);
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void StartRotationBlend(FRotator TargetRotation, float Duration);
 
 };

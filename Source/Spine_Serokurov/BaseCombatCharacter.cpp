@@ -58,6 +58,28 @@ void ABaseCombatCharacter::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
+    if (bIsRotationBlending)
+    {
+        RotationBlendElapsed += DeltaTime;
+        const float Alpha = FMath::Clamp(RotationBlendElapsed / RotationBlendDuration, 0.0f, 1.0f);
+
+        const FQuat NewQuat = FQuat::Slerp(RotationBlendStart.Quaternion(), RotationBlendTarget.Quaternion(), Alpha);
+        SetActorRotation(NewQuat.Rotator());
+
+        if (Alpha >= 1.0f)
+        {
+            bIsRotationBlending = false;
+        }
+    }
+}
+
+void ABaseCombatCharacter::StartRotationBlend(FRotator TargetRotation, float Duration)
+{
+    RotationBlendStart = GetActorRotation();
+    RotationBlendTarget = TargetRotation;
+    RotationBlendDuration = FMath::Max(Duration, KINDA_SMALL_NUMBER);
+    RotationBlendElapsed = 0.0f;
+    bIsRotationBlending = true;
 }
 
 // Called to bind functionality to input
