@@ -29,6 +29,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
 	class UAbilitySystemComponent* AbilitySystemComponent;
@@ -40,6 +41,11 @@ protected:
 	float CurrentAttackDamage = 0.0f;
 
 	void HandleHealthChanged(const FOnAttributeChangeData& Data);
+
+	bool bIsHitstopActive = false;
+	float HitstopRealElapsed = 0.0f;
+	float HitstopRealDuration = 0.1f;
+	float HitstopLastRealTimeSeconds = 0.0f;
 
 	// Защита от дабл-хита: набор целей, уже поражённых каждым слотом коллизии в текущем окне удара
 	// Не UPROPERTY() — UHT не поддерживает TSet как тип значения внутри TMap;
@@ -76,5 +82,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void StartRotationBlend(FRotator TargetRotation, float Duration);
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void TriggerHitstop(float RealDuration = 0.1f, float TimeDilationScale = 0.05f);
 
 };

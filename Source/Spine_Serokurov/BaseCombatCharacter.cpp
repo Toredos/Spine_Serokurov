@@ -4,6 +4,7 @@
 #include "BaseCombatCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "AS_CombatAttributes.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABaseCombatCharacter::ABaseCombatCharacter()
@@ -34,6 +35,11 @@ void ABaseCombatCharacter::BeginPlay()
 
 void ABaseCombatCharacter::HandleHealthChanged(const FOnAttributeChangeData& Data)
 {
+    if (Data.OldValue > 0.0f && Data.NewValue <= 0.0f)
+    {
+        TriggerHitstop();
+    }
+
     OnHealthChanged(Data.OldValue, Data.NewValue);
 }
 
@@ -71,6 +77,37 @@ void ABaseCombatCharacter::Tick(float DeltaTime)
             bIsRotationBlending = false;
         }
     }
+
+    if (bIsHitstopActive)
+    {
+        const float NowReal = GetWorld()->GetRealTimeSeconds();
+        HitstopRealElapsed += (NowReal - HitstopLastRealTimeSeconds);
+        HitstopLastRealTimeSeconds = NowReal;
+
+        if (HitstopRealElapsed >= HitstopRealDuration)
+        {
+            bIsHitstopActive = false;
+            UGameplayStatics::SetGlobalTimeDilation(this, 1.0f);
+        }
+    }
+}
+
+void ABaseCombatCharacter::TriggerHitstop(float RealDuration, float TimeDilationScale)
+{
+    UGameplayStatics::SetGlobalTimeDilation(this, TimeDilationScale);
+    HitstopRealDuration = RealDuration;
+    HitstopRealElapsed = 0.0f;
+    HitstopLastRealTimeSeconds = GetWorld()->GetRealTimeSeconds();
+    bIsHitstopActive = true;
+}
+
+void ABaseCombatCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    if (bIsHitstopActive && GetWorld())
+    {
+        UGameplayStatics::SetGlobalTimeDilation(this, 1.0f);
+    }
+    Super::EndPlay(EndPlayReason);
 }
 
 void ABaseCombatCharacter::StartRotationBlend(FRotator TargetRotation, float Duration)
