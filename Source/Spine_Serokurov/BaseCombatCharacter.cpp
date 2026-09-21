@@ -37,6 +37,22 @@ void ABaseCombatCharacter::HandleHealthChanged(const FOnAttributeChangeData& Dat
     OnHealthChanged(Data.OldValue, Data.NewValue);
 }
 
+bool ABaseCombatCharacter::HasAlreadyHitActorThisWindow(EWeaponCollisionSlot Slot, AActor* OtherActor) const
+{
+    const TSet<TWeakObjectPtr<AActor>>* HitSet = HitActorsThisWindowBySlot.Find(Slot);
+    return HitSet ? HitSet->Contains(OtherActor) : false;
+}
+
+void ABaseCombatCharacter::MarkActorHitThisWindow(EWeaponCollisionSlot Slot, AActor* OtherActor)
+{
+    HitActorsThisWindowBySlot.FindOrAdd(Slot).Add(OtherActor);
+}
+
+void ABaseCombatCharacter::ClearHitActorsThisWindow(EWeaponCollisionSlot Slot)
+{
+    HitActorsThisWindowBySlot.FindOrAdd(Slot).Empty();
+}
+
 // Called every frame
 void ABaseCombatCharacter::Tick(float DeltaTime)
 {

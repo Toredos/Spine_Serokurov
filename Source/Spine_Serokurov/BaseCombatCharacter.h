@@ -41,6 +41,11 @@ protected:
 
 	void HandleHealthChanged(const FOnAttributeChangeData& Data);
 
+	// Защита от дабл-хита: набор целей, уже поражённых каждым слотом коллизии в текущем окне удара
+	// Не UPROPERTY() — UHT не поддерживает TSet как тип значения внутри TMap;
+	// TWeakObjectPtr безопасен без рефлексии, GC не нужен для защиты
+	TMap<EWeaponCollisionSlot, TSet<TWeakObjectPtr<AActor>>> HitActorsThisWindowBySlot;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -53,5 +58,14 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Combat")
 	void OnHealthChanged(float OldValue, float NewValue);
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	bool HasAlreadyHitActorThisWindow(EWeaponCollisionSlot Slot, AActor* OtherActor) const;
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void MarkActorHitThisWindow(EWeaponCollisionSlot Slot, AActor* OtherActor);
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void ClearHitActorsThisWindow(EWeaponCollisionSlot Slot);
 
 };
