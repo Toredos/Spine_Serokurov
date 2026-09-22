@@ -43,6 +43,16 @@ struct FConfigEnemyOverride
 	bool bOverrideDeathSoundPitch = false;
 	UPROPERTY(EditAnywhere, Category = "Sound", meta = (EditCondition = "bOverrideDeathSoundPitch"))
 	float DeathSoundPitch = 1.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Reaction")
+	bool bOverrideReactionPlayRate = false;
+	UPROPERTY(EditAnywhere, Category = "Reaction", meta = (EditCondition = "bOverrideReactionPlayRate"))
+	float ReactionPlayRate = 1.5f;
+
+	UPROPERTY(EditAnywhere, Category = "Reaction")
+	bool bOverrideEnemyRotationBlendDuration = false;
+	UPROPERTY(EditAnywhere, Category = "Reaction", meta = (EditCondition = "bOverrideEnemyRotationBlendDuration"))
+	float EnemyRotationBlendDuration = 0.3f;
 };
 
 UCLASS(BlueprintType)
@@ -71,4 +81,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
 	float DeathSoundPitch = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Reaction")
+	float ReactionPlayRate = 1.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Reaction")
+	float EnemyRotationBlendDuration = 0.3f;
 };

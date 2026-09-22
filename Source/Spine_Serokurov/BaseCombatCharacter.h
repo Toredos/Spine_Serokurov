@@ -107,6 +107,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat") float GetMaxHealth() const;
 	UFUNCTION(BlueprintCallable, Category = "Combat") float GetHitstopRealDuration() const;
 	UFUNCTION(BlueprintCallable, Category = "Combat") float GetHitstopTimeDilation() const;
+	UFUNCTION(BlueprintCallable, Category = "Combat") float GetReactionPlayRate() const;
+	UFUNCTION(BlueprintCallable, Category = "Combat") float GetEnemyRotationBlendDuration() const;
 	UFUNCTION(BlueprintCallable, Category = "Combat") class USoundBase* GetHitReactSound() const;
 	UFUNCTION(BlueprintCallable, Category = "Combat") class USoundBase* GetDeathSound() const;
 	UFUNCTION(BlueprintCallable, Category = "Combat") float GetHitReactSoundPitch() const;

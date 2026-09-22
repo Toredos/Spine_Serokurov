@@ -178,3 +178,15 @@ float ABaseCombatCharacter::GetDeathSoundPitch() const
     if (CombatFeelOverride.bOverrideDeathSoundPitch) return CombatFeelOverride.DeathSoundPitch;
     return CombatFeelConfig ? CombatFeelConfig->DeathSoundPitch : 1.0f;
 }
+
+float ABaseCombatCharacter::GetReactionPlayRate() const
+{
+    if (CombatFeelOverride.bOverrideReactionPlayRate) return CombatFeelOverride.ReactionPlayRate;
+    return CombatFeelConfig ? CombatFeelConfig->ReactionPlayRate : 1.5f;
+}
+
+float ABaseCombatCharacter::GetEnemyRotationBlendDuration() const
+{
+    if (CombatFeelOverride.bOverrideEnemyRotationBlendDuration) return CombatFeelOverride.EnemyRotationBlendDuration;
+    return CombatFeelConfig ? CombatFeelConfig->EnemyRotationBlendDuration : 0.3f;
+}
