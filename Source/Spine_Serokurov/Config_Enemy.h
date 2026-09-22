@@ -5,7 +5,7 @@
 #include "Config_Enemy.generated.h"
 
 USTRUCT(BlueprintType)
-struct FCombatFeelOverride
+struct FConfigEnemyOverride
 {
 	GENERATED_BODY()
 
@@ -46,7 +46,7 @@ struct FCombatFeelOverride
 };
 
 UCLASS(BlueprintType)
-class SPINE_SEROKUROV_API UCombatFeelConfig : public UDataAsset
+class SPINE_SEROKUROV_API UConfig_Enemy : public UDataAsset
 {
 	GENERATED_BODY()
 

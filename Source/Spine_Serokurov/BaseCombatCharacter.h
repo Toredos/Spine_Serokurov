@@ -98,11 +98,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Combat")
 	class USoundBase* CurrentAttackHitSound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	UCombatFeelConfig* CombatFeelConfig;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "! Combat Feel")
+	UConfig_Enemy* CombatFeelConfig;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	FCombatFeelOverride CombatFeelOverride;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "! Combat Feel")
+	FConfigEnemyOverride CombatFeelOverride;
 
 	UFUNCTION(BlueprintCallable, Category = "Combat") float GetMaxHealth() const;
 	UFUNCTION(BlueprintCallable, Category = "Combat") float GetHitstopRealDuration() const;
