@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "GameplayEffectTypes.h" // для FOnAttributeChangeData
+#include "Config_Enemy.h"
 #include "BaseCombatCharacter.generated.h"
 
 UENUM(BlueprintType)
@@ -85,12 +86,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void StartRotationBlend(FRotator TargetRotation, float Duration);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	float HitstopDefaultRealDuration = 0.1f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	float HitstopDefaultTimeDilation = 0.05f;
-
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void TriggerHitstop(float RealDuration = 0.1f, float TimeDilationScale = 0.05f);
 
@@ -103,16 +98,18 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Combat")
 	class USoundBase* CurrentAttackHitSound;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	class USoundBase* HitReactSound;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	UCombatFeelConfig* CombatFeelConfig;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	class USoundBase* DeathSound;
+	FCombatFeelOverride CombatFeelOverride;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	float HitReactSoundPitch = 1.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	float DeathSoundPitch = 1.0f;
+	UFUNCTION(BlueprintCallable, Category = "Combat") float GetMaxHealth() const;
+	UFUNCTION(BlueprintCallable, Category = "Combat") float GetHitstopRealDuration() const;
+	UFUNCTION(BlueprintCallable, Category = "Combat") float GetHitstopTimeDilation() const;
+	UFUNCTION(BlueprintCallable, Category = "Combat") class USoundBase* GetHitReactSound() const;
+	UFUNCTION(BlueprintCallable, Category = "Combat") class USoundBase* GetDeathSound() const;
+	UFUNCTION(BlueprintCallable, Category = "Combat") float GetHitReactSoundPitch() const;
+	UFUNCTION(BlueprintCallable, Category = "Combat") float GetDeathSoundPitch() const;
 
 };

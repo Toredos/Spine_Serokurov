@@ -37,17 +37,17 @@ void ABaseCombatCharacter::HandleHealthChanged(const FOnAttributeChangeData& Dat
 {
     if (Data.OldValue > 0.0f && Data.NewValue <= 0.0f)
     {
-        TriggerHitstop(HitstopDefaultRealDuration, HitstopDefaultTimeDilation);
-        if (DeathSound)
+        TriggerHitstop(GetHitstopRealDuration(), GetHitstopTimeDilation());
+        if (USoundBase* Death = GetDeathSound())
         {
-            UGameplayStatics::PlaySound2D(this, DeathSound, 1.0f, DeathSoundPitch);
+            UGameplayStatics::PlaySound2D(this, Death, 1.0f, GetDeathSoundPitch());
         }
     }
     else if (Data.NewValue < Data.OldValue)
     {
-        if (HitReactSound)
+        if (USoundBase* HitReact = GetHitReactSound())
         {
-            UGameplayStatics::PlaySound2D(this, HitReactSound, 1.0f, HitReactSoundPitch);
+            UGameplayStatics::PlaySound2D(this, HitReact, 1.0f, GetHitReactSoundPitch());
         }
     }
 
@@ -135,4 +135,46 @@ void ABaseCombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+float ABaseCombatCharacter::GetMaxHealth() const
+{
+    if (CombatFeelOverride.bOverrideMaxHealth) return CombatFeelOverride.MaxHealth;
+    return CombatFeelConfig ? CombatFeelConfig->MaxHealth : 100.0f;
+}
+
+float ABaseCombatCharacter::GetHitstopRealDuration() const
+{
+    if (CombatFeelOverride.bOverrideHitstopRealDuration) return CombatFeelOverride.HitstopRealDuration;
+    return CombatFeelConfig ? CombatFeelConfig->HitstopRealDuration : 0.1f;
+}
+
+float ABaseCombatCharacter::GetHitstopTimeDilation() const
+{
+    if (CombatFeelOverride.bOverrideHitstopTimeDilation) return CombatFeelOverride.HitstopTimeDilation;
+    return CombatFeelConfig ? CombatFeelConfig->HitstopTimeDilation : 0.05f;
+}
+
+USoundBase* ABaseCombatCharacter::GetHitReactSound() const
+{
+    if (CombatFeelOverride.bOverrideHitReactSound) return CombatFeelOverride.HitReactSound;
+    return CombatFeelConfig ? CombatFeelConfig->HitReactSound : nullptr;
+}
+
+USoundBase* ABaseCombatCharacter::GetDeathSound() const
+{
+    if (CombatFeelOverride.bOverrideDeathSound) return CombatFeelOverride.DeathSound;
+    return CombatFeelConfig ? CombatFeelConfig->DeathSound : nullptr;
+}
+
+float ABaseCombatCharacter::GetHitReactSoundPitch() const
+{
+    if (CombatFeelOverride.bOverrideHitReactSoundPitch) return CombatFeelOverride.HitReactSoundPitch;
+    return CombatFeelConfig ? CombatFeelConfig->HitReactSoundPitch : 1.0f;
+}
+
+float ABaseCombatCharacter::GetDeathSoundPitch() const
+{
+    if (CombatFeelOverride.bOverrideDeathSoundPitch) return CombatFeelOverride.DeathSoundPitch;
+    return CombatFeelConfig ? CombatFeelConfig->DeathSoundPitch : 1.0f;
 }
