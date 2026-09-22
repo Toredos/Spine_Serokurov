@@ -54,18 +54,18 @@ void ABaseCombatCharacter::HandleHealthChanged(const FOnAttributeChangeData& Dat
     OnHealthChanged(Data.OldValue, Data.NewValue);
 }
 
-bool ABaseCombatCharacter::HasAlreadyHitActorThisWindow(EWeaponCollisionSlot Slot, AActor* OtherActor) const
+bool ABaseCombatCharacter::HasAlreadyHitActorThisWindow(FGameplayTag Slot, AActor* OtherActor) const
 {
     const TSet<TWeakObjectPtr<AActor>>* HitSet = HitActorsThisWindowBySlot.Find(Slot);
     return HitSet ? HitSet->Contains(OtherActor) : false;
 }
 
-void ABaseCombatCharacter::MarkActorHitThisWindow(EWeaponCollisionSlot Slot, AActor* OtherActor)
+void ABaseCombatCharacter::MarkActorHitThisWindow(FGameplayTag Slot, AActor* OtherActor)
 {
     HitActorsThisWindowBySlot.FindOrAdd(Slot).Add(OtherActor);
 }
 
-void ABaseCombatCharacter::ClearHitActorsThisWindow(EWeaponCollisionSlot Slot)
+void ABaseCombatCharacter::ClearHitActorsThisWindow(FGameplayTag Slot)
 {
     HitActorsThisWindowBySlot.FindOrAdd(Slot).Empty();
 }
@@ -189,4 +189,18 @@ float ABaseCombatCharacter::GetEnemyRotationBlendDuration() const
 {
     if (CombatFeelOverride.bOverrideEnemyRotationBlendDuration) return CombatFeelOverride.EnemyRotationBlendDuration;
     return CombatFeelConfig ? CombatFeelConfig->EnemyRotationBlendDuration : 0.3f;
+}
+
+void ABaseCombatCharacter::DisableAllWeaponCollisionSlots()
+{
+    for (const FWeaponCollisionSlotConfig& SlotConfig : WeaponCollisionSlots)
+    {
+        if (SlotConfig.Component)
+        {
+            if (UPrimitiveComponent* Prim = Cast<UPrimitiveComponent>(SlotConfig.Component))
+            {
+                Prim->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+            }
+        }
+    }
 }

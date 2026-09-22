@@ -1,20 +1,25 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
-#include "GameplayEffectTypes.h" // ��� FOnAttributeChangeData
+#include "GameplayEffectTypes.h" // для FOnAttributeChangeData
+#include "GameplayTagContainer.h" // для FGameplayTag
 #include "Config_Enemy.h"
 #include "BaseCombatCharacter.generated.h"
 
-UENUM(BlueprintType)
-enum class EWeaponCollisionSlot : uint8
+USTRUCT(BlueprintType)
+struct FWeaponCollisionSlotConfig
 {
-	RightHand,
-	LeftHand,
-	RightFoot
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere)
+	FGameplayTag SlotTag;
+
+	UPROPERTY(EditAnywhere)
+	class UPrimitiveComponent* Component;
 };
 
 UCLASS()
@@ -54,10 +59,10 @@ protected:
 	float HitstopRealDuration = 0.1f;
 	float HitstopLastRealTimeSeconds = 0.0f;
 
-	// ������ �� ����-����: ����� �����, ��� ��������� ������ ������ �������� � ������� ���� �����
-	// �� UPROPERTY() � UHT �� ������������ TSet ��� ��� �������� ������ TMap;
-	// TWeakObjectPtr ��������� ��� ���������, GC �� ����� ��� ������
-	TMap<EWeaponCollisionSlot, TSet<TWeakObjectPtr<AActor>>> HitActorsThisWindowBySlot;
+	// Защита от дабл-хита: набор целей, уже поражённых каждым слотом коллизии в текущем окне удара
+	// Не UPROPERTY() — UHT не поддерживает TSet как тип значения внутри TMap;
+	// TWeakObjectPtr безопасен без рефлексии, GC не нужен для защиты
+	TMap<FGameplayTag, TSet<TWeakObjectPtr<AActor>>> HitActorsThisWindowBySlot;
 
 	bool bIsRotationBlending = false;
 	FRotator RotationBlendStart;
@@ -74,20 +79,29 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// Конфигурация слотов коллизии оружия персонажа: тег → физический компонент.
+	// Настраивается один раз на персонажа (Instance Editable), не требует C++ для нового слота.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	TArray<FWeaponCollisionSlotConfig> WeaponCollisionSlots;
+
+	// Слот, активный для текущей проигрываемой стадии атаки — выставляется способностью (GA_ComboAttack) из данных.
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	FGameplayTag CurrentActiveCollisionSlot;
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Combat")
-	void SetWeaponCollisionEnabled(EWeaponCollisionSlot Slot, bool bEnabled);
+	void SetWeaponCollisionEnabled(bool bEnabled);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Combat")
 	void OnHealthChanged(float OldValue, float NewValue);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	bool HasAlreadyHitActorThisWindow(EWeaponCollisionSlot Slot, AActor* OtherActor) const;
+	bool HasAlreadyHitActorThisWindow(FGameplayTag Slot, AActor* OtherActor) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void MarkActorHitThisWindow(EWeaponCollisionSlot Slot, AActor* OtherActor);
+	void MarkActorHitThisWindow(FGameplayTag Slot, AActor* OtherActor);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void ClearHitActorsThisWindow(EWeaponCollisionSlot Slot);
+	void ClearHitActorsThisWindow(FGameplayTag Slot);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void StartRotationBlend(FRotator TargetRotation, float Duration);
@@ -100,6 +114,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void SetCurrentMovementInputDirection(FVector Direction) { CachedMovementInputDirection = Direction; }
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void DisableAllWeaponCollisionSlots();
 
 	UPROPERTY(BlueprintReadWrite, Category = "Combat")
 	class USoundBase* CurrentAttackHitSound;
