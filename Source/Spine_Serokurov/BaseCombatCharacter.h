@@ -46,6 +46,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	UConfig_Enemy* CombatFeelConfig;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	class UPrimaryDataAsset* ComboDataAsset;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	FConfigEnemyOverride CombatFeelOverride;
 
@@ -85,7 +88,7 @@ public:
 
 	// Конфигурация слотов коллизии оружия персонажа: тег → физический компонент.
 	// Настраивается один раз на персонажа (Instance Editable), не требует C++ для нового слота.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "! Combat")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	TArray<FWeaponCollisionSlotConfig> WeaponCollisionSlots;
 
 	// Слот, активный для текущей проигрываемой стадии атаки — выставляется способностью (GA_ComboAttack) из данных.
