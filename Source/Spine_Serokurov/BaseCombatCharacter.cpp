@@ -138,13 +138,6 @@ void ABaseCombatCharacter::StartRotationBlend(FRotator TargetRotation, float Dur
     bIsRotationBlending = true;
 }
 
-// Called to bind functionality to input
-void ABaseCombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-    Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
 float ABaseCombatCharacter::GetMaxHealth() const
 {
     if (CombatFeelOverride.bOverrideMaxHealth) return CombatFeelOverride.MaxHealth;
@@ -205,10 +198,7 @@ void ABaseCombatCharacter::DisableAllWeaponCollisionSlots()
     {
         if (SlotConfig.Component)
         {
-            if (UPrimitiveComponent* Prim = Cast<UPrimitiveComponent>(SlotConfig.Component))
-            {
-                Prim->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-            }
+            SlotConfig.Component->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         }
     }
 }
