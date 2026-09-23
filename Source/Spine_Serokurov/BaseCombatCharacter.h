@@ -15,10 +15,10 @@ struct FWeaponCollisionSlotConfig
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FGameplayTag SlotTag;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UPrimitiveComponent* Component;
 };
 
@@ -72,6 +72,10 @@ protected:
 
 	FVector CachedMovementInputDirection = FVector::ZeroVector;
 
+	UFUNCTION()
+	void OnWeaponSlotOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -81,7 +85,7 @@ public:
 
 	// Конфигурация слотов коллизии оружия персонажа: тег → физический компонент.
 	// Настраивается один раз на персонажа (Instance Editable), не требует C++ для нового слота.
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "! Combat")
 	TArray<FWeaponCollisionSlotConfig> WeaponCollisionSlots;
 
 	// Слот, активный для текущей проигрываемой стадии атаки — выставляется способностью (GA_ComboAttack) из данных.
@@ -131,4 +135,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat") float GetHitReactSoundPitch() const;
 	UFUNCTION(BlueprintCallable, Category = "Combat") float GetDeathSoundPitch() const;
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	FGameplayTag GetSlotTagForComponent(UPrimitiveComponent* Component) const;
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void ClearHitActorsThisWindowForActiveSlot();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Combat")
+	void HandleWeaponOverlap(AActor* OtherActor, FGameplayTag Slot);
 };

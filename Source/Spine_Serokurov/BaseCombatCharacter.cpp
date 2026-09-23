@@ -31,6 +31,14 @@ void ABaseCombatCharacter::BeginPlay()
         AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UAS_CombatAttributes::GetHealthAttribute())
             .AddUObject(this, &ABaseCombatCharacter::HandleHealthChanged);
     }
+
+    for (const FWeaponCollisionSlotConfig& SlotConfig : WeaponCollisionSlots)
+    {
+        if (SlotConfig.Component)
+        {
+            SlotConfig.Component->OnComponentBeginOverlap.AddDynamic(this, &ABaseCombatCharacter::OnWeaponSlotOverlap);
+        }
+    }
 }
 
 void ABaseCombatCharacter::HandleHealthChanged(const FOnAttributeChangeData& Data)
@@ -203,4 +211,28 @@ void ABaseCombatCharacter::DisableAllWeaponCollisionSlots()
             }
         }
     }
+}
+
+FGameplayTag ABaseCombatCharacter::GetSlotTagForComponent(UPrimitiveComponent* Component) const
+{
+    for (const FWeaponCollisionSlotConfig& SlotConfig : WeaponCollisionSlots)
+    {
+        if (SlotConfig.Component == Component)
+        {
+            return SlotConfig.SlotTag;
+        }
+    }
+    return FGameplayTag();
+}
+
+void ABaseCombatCharacter::ClearHitActorsThisWindowForActiveSlot()
+{
+    ClearHitActorsThisWindow(CurrentActiveCollisionSlot);
+}
+
+void ABaseCombatCharacter::OnWeaponSlotOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+    const FGameplayTag Slot = GetSlotTagForComponent(OverlappedComponent);
+    HandleWeaponOverlap(OtherActor, Slot);
 }
